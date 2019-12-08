@@ -1,0 +1,43 @@
+!pip install weasyprint
+
+!pip install markovify
+
+from google.colab import files
+import markovify
+from weasyprint import HTML
+
+novel = ''
+
+uploaded = files.upload()
+for fn in uploaded.keys():
+  text = uploaded[fn].decode()
+ 
+text_model = markovify.Text(text)
+
+
+for i in range(1000):
+
+  novel += str(text_model.make_short_sentence(130))
+  novel += str(text_model.make_short_sentence(300))
+  novel += str(text_model.make_short_sentence(160))
+  novel += str(text_model.make_short_sentence(150))
+  novel += str(text_model.make_short_sentence(100))
+
+html_template = f"""
+<html>
+  <head>
+  <title>DraculaRandomized</title>
+  <style>
+  <pre>
+    body {{
+      font-family: "Times New Roman";
+    }}
+  </style>
+  </head>
+  <body>
+  {novel}
+  </body>
+</html>
+"""
+
+HTML(string=html_template).write_pdf("MyNovel.pdf")
